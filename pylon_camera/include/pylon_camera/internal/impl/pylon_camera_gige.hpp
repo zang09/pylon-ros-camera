@@ -146,7 +146,6 @@ bool PylonGigECamera::applyCamSpecificStartupSettings(const PylonCameraParameter
     {
         if (parameters.startup_user_set_ == "Default")
             {
-
                 // Remove all previous settings (sequencer etc.)
                 // Default Setting = Free-Running
                 cam_->UserSetSelector.SetValue(Basler_GigECameraParams::UserSetSelector_Default);
@@ -996,6 +995,38 @@ template <>
 std::string PylonGigECamera::setDeviceLinkThroughputLimit(const int& limit)
 {
     return "Trying to change the device link throughput limit. The connected Camera not supporting this feature";
+}
+
+template <>
+std::string PylonGigECamera::setAutoTargetBrightness(const float& target_brightness)
+{
+    try
+    {
+        if ( GenApi::IsAvailable( cam_->AutoTargetValue ))
+        {
+             if(cam_->AutoTargetValue.GetMin() > target_brightness || cam_->AutoTargetValue.GetMax() < target_brightness)
+             {
+                 cam_->AutoTargetValue.SetValue(cam_->AutoTargetValue.GetMin());
+                 return "Auto Target Value is out of range set as min: " + std::to_string(cam_->AutoTargetValue.GetValue());
+             }
+             else
+             {
+                 cam_->AutoTargetValue.SetValue(target_brightness);
+             }
+        }
+        else
+        {
+             ROS_ERROR_STREAM("Error while trying to change the auto target brightness. The connected Camera not supporting this feature");
+             return "The connected Camera not supporting this feature";
+        }
+    }
+    catch ( const GenICam::GenericException &e )
+    {
+        ROS_ERROR_STREAM("An exception while changing the auto target brightness occurred:" << e.GetDescription());
+        return e.GetDescription();
+    }
+
+    return "done";
 }
 
 template <>

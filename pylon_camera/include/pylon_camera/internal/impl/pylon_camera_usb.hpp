@@ -387,6 +387,38 @@ std::string PylonUSBCamera::typeName() const
 }
 
 template <>
+std::string PylonUSBCamera::setAutoTargetBrightness(const float& target_brightness)
+{
+    try
+    {
+        if ( GenApi::IsAvailable( cam_->AutoTargetBrightness ))
+        {
+             if(cam_->AutoTargetBrightness.GetMin() > target_brightness || cam_->AutoTargetBrightness.GetMax() < target_brightness)
+             {
+                 cam_->AutoTargetBrightness.SetValue(cam_->AutoTargetBrightness.GetMin());
+                 return "Auto Target Value is out of range set as min: " + std::to_string(cam_->AutoTargetBrightness.GetValue());
+             }
+             else
+             {
+                 cam_->AutoTargetBrightness.SetValue(target_brightness);
+             }
+        }
+        else
+        {
+             ROS_ERROR_STREAM("Error while trying to change the auto target brightness. The connected Camera not supporting this feature");
+             return "The connected Camera not supporting this feature";
+        }
+    }
+    catch ( const GenICam::GenericException &e )
+    {
+        ROS_ERROR_STREAM("An exception while changing the auto target brightness occurred:" << e.GetDescription());
+        return e.GetDescription();
+    }
+
+    return "done";
+}
+
+template <>
 std::string PylonUSBCamera::setAcquisitionFrameCount(const int& frameCount)
 {
     try

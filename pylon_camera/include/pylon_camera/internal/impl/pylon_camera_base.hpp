@@ -979,6 +979,11 @@ bool PylonCameraImpl<CameraTraitT>::setGain(const float& target_gain,
     return true;
 }
 
+template <typename CameraTraitT>
+std::string PylonCameraImpl<CameraTraitT>::setAutoTargetBrightness(const float& target_brightness)
+{
+    // Interface
+}
 
 template <typename CameraTraitT>
 bool PylonCameraImpl<CameraTraitT>::setBrightness(const int& target_brightness,

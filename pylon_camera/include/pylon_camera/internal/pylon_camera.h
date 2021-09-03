@@ -92,6 +92,8 @@ public:
 
     virtual bool setGamma(const float& target_gamma, float& reached_gamma);
 
+    virtual std::string setAutoTargetBrightness(const float &target_value);
+
     virtual bool setBrightness(const int& target_brightness,
                                const float& current_brightness,
                                const bool& exposure_auto,

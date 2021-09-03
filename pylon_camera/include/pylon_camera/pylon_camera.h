@@ -209,6 +209,14 @@ public:
     virtual bool setGamma(const float& target_gamma, float& reached_gamma) = 0;
 
     /**
+     * Custom Function by haebeom
+     * @brief setAutoBrightness
+     * @param target_brightness
+     * @return
+     */
+    virtual std::string setAutoTargetBrightness(const float& target_brightness) = 0;
+
+    /**
      * Sets the target brightness
      * Setting the exposure time to -1 enables the AutoExposureContinuous mode.
      * Setting the exposure time to  0 disables the AutoExposure function.
