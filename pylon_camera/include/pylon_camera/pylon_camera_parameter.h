@@ -201,7 +201,7 @@ public:
      * given, it is not possible to reach the brightness, because both are
      * assumed to be fix.
      */
-    int brightness_;
+     float brightness_;
 
     /**
      * Flag which indicates if the average brightness is provided and hence
@@ -233,6 +233,7 @@ public:
      */
     bool exposure_auto_;
     bool gain_auto_;
+    int  white_balance_auto_;
     // #######################################################################
 
     /**
