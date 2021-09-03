@@ -55,11 +55,12 @@ PylonCameraParameter::PylonCameraParameter() :
         gain_given_(false),
         gamma_(1.0),
         gamma_given_(false),
-        brightness_(100),
+        brightness_(100.0),
         brightness_given_(false),
         brightness_continuous_(false),
         exposure_auto_(true),
         gain_auto_(true),
+        white_balance_auto_(-1),
         // #########################
         exposure_search_timeout_(5.),
         auto_exp_upper_lim_(0.0),
@@ -159,28 +160,28 @@ void PylonCameraParameter::readFromRosParameterServer(const ros::NodeHandle& nh)
     if ( exposure_given_ )
     {
         nh.getParam("exposure", exposure_);
-        std::cout << "exposure is given and has value " << exposure_ << std::endl;
+        std::cout << "[INFO] exposure is given and has value " << exposure_ << std::endl;
     }
 
     gain_given_ = nh.hasParam("gain");
     if ( gain_given_ )
     {
         nh.getParam("gain", gain_);
-        std::cout << "gain is given and has value " << gain_ << std::endl;
+        std::cout << "[INFO] gain is given and has value " << gain_ << std::endl;
     }
 
     gamma_given_ = nh.hasParam("gamma");
     if ( gamma_given_ )
     {
         nh.getParam("gamma", gamma_);
-        std::cout << "gamma is given and has value " << gamma_ << std::endl;
+        std::cout << "[INFO] gamma is given and has value " << gamma_ << std::endl;
     }
 
     brightness_given_ = nh.hasParam("brightness");
     if ( brightness_given_ )
     {
         nh.getParam("brightness", brightness_);
-        std::cout << "brightness is given and has value " << brightness_
+        std::cout << "[INFO] brightness is given and has value " << brightness_
             << std::endl;
         if ( gain_given_ && exposure_given_ )
         {
@@ -196,17 +197,22 @@ void PylonCameraParameter::readFromRosParameterServer(const ros::NodeHandle& nh)
             if ( nh.hasParam("brightness_continuous") )
             {
                 nh.getParam("brightness_continuous", brightness_continuous_);
-                std::cout << "brightness is continuous" << std::endl;
+                std::cout << "[INFO] brightness is continuous" << std::endl;
             }
             if ( nh.hasParam("exposure_auto") )
             {
                 nh.getParam("exposure_auto", exposure_auto_);
-                std::cout << "exposure is set to auto" << std::endl;
+                std::cout << "[INFO] exposure is set to auto" << std::endl;
             }
             if ( nh.hasParam("gain_auto") )
             {
                 nh.getParam("gain_auto", gain_auto_);
-                std::cout << "gain is set to auto" << std::endl;
+                std::cout << "[INFO] gain is set to auto" << std::endl;
+            }
+            if ( nh.hasParam("white_balance_auto") )
+            {
+                nh.getParam("white_balance_auto", white_balance_auto_);
+                std::cout << "[INFO] white balance is set to " << white_balance_auto_ << std::endl;
             }
         }
     }
@@ -311,10 +317,10 @@ void PylonCameraParameter::validateParameterSet(const ros::NodeHandle& nh)
 
     if ( brightness_given_ && ( brightness_ < 0.0 || brightness_ > 255 ) )
     {
-        ROS_WARN_STREAM("Desired brightness not in allowed range [0 - 255]! "
-               << "Brightness = " << brightness_ << ". Will reset it to "
-               << "default value!");
-        brightness_given_ = false;
+        // ROS_WARN_STREAM("Desired brightness not in allowed range [0 - 255]! "
+        //        << "Brightness = " << brightness_ << ". Will reset it to "
+        //        << "default value!");
+        // brightness_given_ = false;
     }
 
     if ( exposure_search_timeout_ < 5.)

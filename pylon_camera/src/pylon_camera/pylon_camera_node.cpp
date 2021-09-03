@@ -497,6 +497,8 @@ bool PylonCameraNode::startGrabbing()
         ROS_INFO_STREAM("Setting gamma to " << pylon_camera_parameter_set_.gamma_
                 << ", reached: " << reached_gamma);
     }
+
+    /*/ Origin Function 
     if ( pylon_camera_parameter_set_.brightness_given_ )
     {   
         int reached_brightness;
@@ -522,6 +524,29 @@ bool PylonCameraNode::startGrabbing()
         { 
             pylon_camera_->disableAllRunningAutoBrightessFunctions();
         }
+    }
+    */
+
+    if ( pylon_camera_parameter_set_.exposure_auto_ )
+    {
+        pylon_camera_->enableContinuousAutoExposure();
+    }
+    if ( pylon_camera_parameter_set_.gain_auto_ )
+    {
+        pylon_camera_->enableContinuousAutoGain();
+    }
+    if ( pylon_camera_parameter_set_.white_balance_auto_ != -1)
+    {
+        pylon_camera_->setBalanceWhiteAuto(pylon_camera_parameter_set_.white_balance_auto_);
+    }
+    if ( pylon_camera_parameter_set_.brightness_given_ )
+    {   
+        std::string result = pylon_camera_->setAutoTargetBrightness( pylon_camera_parameter_set_.brightness_ );
+
+        if (result == "done")
+          ROS_INFO_STREAM("Auto target Value: " << pylon_camera_parameter_set_.brightness_ << "(" << result << ")");
+        else
+          ROS_WARN_STREAM("Auto target Value: " << pylon_camera_parameter_set_.brightness_ << "(" << result << ")");
     }
 
     ROS_INFO_STREAM("Startup settings: "
